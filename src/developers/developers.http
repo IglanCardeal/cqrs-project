@@ -1,0 +1,31 @@
+### list developers
+
+GET http://localhost:3000/developers
+
+### get developer by id
+
+GET http://localhost:3000/developers/dev_q5GE1DsWepjS0ai82dwXC
+
+### create a developer
+
+POST http://localhost:3000/developers
+Content-Type: application/json
+
+{
+  "name": "Foo Bar da Silva",
+  "email": "test2@acme.com",
+  "dateOfBirth": "1990-01-20"
+}
+
+### update a developer
+
+PATCH  http://localhost:3000/developers/dev_J6__2PnEdPZu38xLC6cJa
+Content-Type: application/json
+
+{
+  "dateOfBirth": "1990-02-20"
+}
+
+### Remove a developer
+
+DELETE   http://localhost:3000/developers/dev_J6__2PnEdPZu38xLC6cJa

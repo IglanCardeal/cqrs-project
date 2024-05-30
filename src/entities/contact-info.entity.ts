@@ -10,7 +10,7 @@ export class ContactInfo {
   @JoinColumn()
   employee: Employee
 
-  @Column()
+  @Column({ nullable: true })
   phone: string
 
   @Column()

@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
       type: 'sqlite',
       database: 'db.sqlite',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      logging: true,
       synchronize: true,
     }),
     DevelopersModule,

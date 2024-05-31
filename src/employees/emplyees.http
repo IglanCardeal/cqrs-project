@@ -12,3 +12,15 @@ Content-Type: application/json
     "email": "employee@acme.com"
   }
 }
+
+### update employee
+PATCH  http://localhost:3000/employees/3
+Content-Type: application/json
+
+{
+  "name": "Employee Update",
+  "managerId": 2,
+  "contactInfo": {
+    "email": "employee2@acme.com"
+  }
+}

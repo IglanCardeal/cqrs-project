@@ -1,1 +1,14 @@
+### Get by id
 GET http://localhost:3000/employees/1
+
+### create a new one
+POST http://localhost:3000/employees
+Content-Type: application/json
+
+{
+  "name": "Employee 1",
+  "managerId": 2,
+  "contactInfo": {
+    "email": "employee@acme.com"
+  }
+}

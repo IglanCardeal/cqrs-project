@@ -7,19 +7,28 @@ import {
   Param,
   NotFoundException,
 } from '@nestjs/common'
-import { CreateEmployeeDto } from './dto/create-employee.dto'
 import { UpdateEmployeeDto } from './dto/update-employee.dto'
-import { QueryBus } from '@nestjs/cqrs'
+import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { plainToClass } from 'class-transformer'
 import { GetEmployeeQuery } from './queries/get-employee/get-employee.query'
+import {
+  CreateEmployeeCommand,
+  CreateEmployeeDto,
+} from './commands/create-employee'
 
 @Controller('employees')
 export class EmployeesController {
-  constructor(private readonly queryBus: QueryBus) {}
+  constructor(
+    private readonly queryBus: QueryBus,
+    private readonly commandBus: CommandBus,
+  ) {}
 
   @Post()
-  create(@Body() _createEmployeeDto: CreateEmployeeDto) {
-    return null
+  async create(@Body() dto: CreateEmployeeDto) {
+    const createEmployeeCommand = plainToClass(CreateEmployeeCommand, dto)
+    const id = await this.commandBus.execute(createEmployeeCommand)
+    const query = plainToClass(GetEmployeeQuery, { id })
+    return this.queryBus.execute(query)
   }
 
   @Get()

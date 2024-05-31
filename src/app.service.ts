@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectDataSource } from '@nestjs/typeorm'
 import { DataSource } from 'typeorm'
-import { Employee } from './entities/employee.entity'
-import { ContactInfo } from './entities/contact-info.entity'
+import { Employee } from './employees/entities/employee.entity'
+import { ContactInfo } from './employees/entities/contact-info.entity'
 import { Task } from './entities/task.entity'
 import { Meeting } from './entities/meeting.entity'
 
@@ -17,18 +17,16 @@ export class AppService {
     await this.dataSource.transaction(async (db) => {
       const ceo = db.create(Employee, {
         name: 'Mr. CEO',
+        contactInfo: db.create(ContactInfo, {
+          email: 'ceo@acme.com',
+        }),
       })
       await db.save(ceo)
-
-      const contactInfo = db.create(ContactInfo, {
-        email: 'ceo@acme.com',
-        employee: ceo,
-      })
-      await db.save(contactInfo)
 
       const manager = db.create(Employee, {
         name: 'Manager da Silva',
         manager: ceo,
+        contactInfo: db.create(ContactInfo, {}),
       })
       await db.save(manager)
 

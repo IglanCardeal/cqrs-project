@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { EmployeesModule } from './employees/employees.module'
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
       logging: true,
       synchronize: true,
     }),
+    EmployeesModule,
   ],
   providers: [AppService],
 })

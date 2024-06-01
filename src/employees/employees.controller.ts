@@ -18,6 +18,10 @@ import {
   UpdateEmployeeCommand,
   UpdateEmployeeDto,
 } from './commands/update-employee'
+import {
+  AssignManagerCommand,
+  AssignManagerDto,
+} from './commands/assign-manager'
 
 @Controller('employees')
 export class EmployeesController {
@@ -56,6 +60,20 @@ export class EmployeesController {
       id: +id,
     })
     const affectedRows = await this.commandBus.execute(updateEmployeeCommand)
+    if (!affectedRows) throw new NotFoundException()
+    const getEmployeeQuery = plainToClass(GetEmployeeQuery, {
+      id: +id,
+    })
+    return this.queryBus.execute(getEmployeeQuery)
+  }
+
+  @Patch(':id/assign-manager')
+  async assignManager(@Param('id') id: string, @Body() dto: AssignManagerDto) {
+    const assignManagerCommand = plainToClass(AssignManagerCommand, {
+      ...dto,
+      id: +id,
+    })
+    const affectedRows = await this.commandBus.execute(assignManagerCommand)
     if (!affectedRows) throw new NotFoundException()
     const getEmployeeQuery = plainToClass(GetEmployeeQuery, {
       id: +id,

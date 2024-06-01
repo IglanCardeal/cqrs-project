@@ -24,3 +24,11 @@ Content-Type: application/json
     "email": "employee2@acme.com"
   }
 }
+
+### assign manager
+PATCH  http://localhost:3000/employees/3/assign-manager
+Content-Type: application/json
+
+{
+  "managerId": 1
+}

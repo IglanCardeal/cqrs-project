@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { EmployeesModule } from './employees/employees.module'
+import { ReportsModule } from './reports/reports.module'
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { EmployeesModule } from './employees/employees.module'
       synchronize: true,
     }),
     EmployeesModule,
+    ReportsModule,
   ],
   providers: [AppService],
 })

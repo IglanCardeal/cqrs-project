@@ -14,37 +14,48 @@ export class AppService {
   ) {}
 
   async seed() {
-    await this.dataSource.transaction(async (db) => {
-      const ceo = db.create(Employee, {
+    const queryRunner = this.dataSource.createQueryRunner()
+    await queryRunner.connect()
+    await queryRunner.startTransaction()
+
+    try {
+      const ceo = queryRunner.manager.create(Employee, {
         name: 'Mr. CEO',
-        contactInfo: db.create(ContactInfo, {
+        contactInfo: queryRunner.manager.create(ContactInfo, {
           email: 'ceo@acme.com',
         }),
       })
-      await db.save(ceo)
+      await queryRunner.manager.save(ceo)
 
-      const manager = db.create(Employee, {
+      const manager = queryRunner.manager.create(Employee, {
         name: 'Manager da Silva',
         manager: ceo,
-        contactInfo: db.create(ContactInfo, {}),
+        contactInfo: queryRunner.manager.create(ContactInfo, {}),
       })
-      await db.save(manager)
+      await queryRunner.manager.save(manager)
 
-      const task1 = db.create(Task, {
+      const task1 = queryRunner.manager.create(Task, {
         assignee: manager,
         name: 'Manager Task 1',
       })
-      const task2 = db.create(Task, {
+      const task2 = queryRunner.manager.create(Task, {
         assignee: manager,
         name: 'Manager Task 2',
       })
-      await db.save([task1, task2])
+      await queryRunner.manager.save([task1, task2])
 
-      const meeting = db.create(Meeting, {
+      const meeting = queryRunner.manager.create(Meeting, {
         attendees: [ceo, manager],
         zoomUrl: 'any_url',
       })
-      await db.save(meeting)
-    })
+      await queryRunner.manager.save(meeting)
+
+      await queryRunner.commitTransaction()
+    } catch (err) {
+      await queryRunner.rollbackTransaction()
+      throw err
+    } finally {
+      await queryRunner.release()
+    }
   }
 }

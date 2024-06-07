@@ -2,7 +2,6 @@ import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs'
 import { AssignManagerCommand } from './assign-manager.command'
 import { Employee } from '@src/employees/entities/employee.entity'
 import { DataSource } from 'typeorm'
-import { ManagerAssignedEvent } from '@src/employees/events/manager-assigned'
 
 @CommandHandler(AssignManagerCommand)
 export class AssignManagerHandler
@@ -21,17 +20,12 @@ export class AssignManagerHandler
 
       if (!employee) return 0
 
-      const isNewManager =
-        command.managerId && command.managerId !== employee.managerId
-
       employee.managerId = command.managerId
       await db.save(Employee, employee)
 
-      if (isNewManager) {
-        await this.eventBus.publish(
-          new ManagerAssignedEvent(employee.id, command.managerId),
-        )
-      }
+      await Promise.all(
+        employee.getEvents().map((event) => this.eventBus.publish(event)),
+      )
 
       return 1
     })

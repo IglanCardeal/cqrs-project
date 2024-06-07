@@ -3,7 +3,6 @@ import { CreateEmployeeCommand } from './create-employee.command'
 import { DataSource } from 'typeorm'
 import { ContactInfo } from '@src/employees/entities/contact-info.entity'
 import { Employee } from '@src/employees/entities/employee.entity'
-import { ManagerAssignedEvent } from '@src/employees/events/manager-assigned'
 
 @CommandHandler(CreateEmployeeCommand)
 export class CreateEmployeeHandler
@@ -23,11 +22,9 @@ export class CreateEmployeeHandler
       })
       await db.save(employee)
 
-      if (command.managerId) {
-        await this.eventBus.publish(
-          new ManagerAssignedEvent(employee.id, command.managerId),
-        )
-      }
+      await Promise.all(
+        employee.getEvents().map((event) => this.eventBus.publish(event)),
+      )
 
       return employee.id
     })

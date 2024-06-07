@@ -30,7 +30,9 @@ export class AppService {
       const manager = queryRunner.manager.create(Employee, {
         name: 'Manager da Silva',
         manager: ceo,
-        contactInfo: queryRunner.manager.create(ContactInfo, {}),
+        contactInfo: queryRunner.manager.create(ContactInfo, {
+          email: 'manager@acme.com',
+        }),
       })
       await queryRunner.manager.save(manager)
 

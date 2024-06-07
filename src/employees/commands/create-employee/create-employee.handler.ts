@@ -1,8 +1,9 @@
-import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs'
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs'
 import { CreateEmployeeCommand } from './create-employee.command'
 import { DataSource } from 'typeorm'
 import { ContactInfo } from '@src/employees/entities/contact-info.entity'
 import { Employee } from '@src/employees/entities/employee.entity'
+import { EntityEventsDispatcher } from '@src/common/entity-events-dispatcher'
 
 @CommandHandler(CreateEmployeeCommand)
 export class CreateEmployeeHandler
@@ -10,7 +11,7 @@ export class CreateEmployeeHandler
 {
   constructor(
     private readonly dataSource: DataSource,
-    private readonly eventBus: EventBus,
+    private readonly entityDispatcher: EntityEventsDispatcher,
   ) {}
 
   async execute(command: CreateEmployeeCommand): Promise<number> {
@@ -22,9 +23,7 @@ export class CreateEmployeeHandler
       })
       await db.save(employee)
 
-      await Promise.all(
-        employee.getEvents().map((event) => this.eventBus.publish(event)),
-      )
+      await this.entityDispatcher.dispatchEvents(employee)
 
       return employee.id
     })

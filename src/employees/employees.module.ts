@@ -7,9 +7,14 @@ import { CqrsModule } from '@nestjs/cqrs'
 import { employeesQueriesHandlers } from './queries/handlers'
 import { commandsHandlers } from './commands/handlers'
 import { eventsHandlers } from './events/handlers'
+import { CommonModule } from '@src/common/common.module'
 
 @Module({
-  imports: [CqrsModule, TypeOrmModule.forFeature([Employee, ContactInfo])],
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([Employee, ContactInfo]),
+    CommonModule,
+  ],
   controllers: [EmployeesController],
   providers: [
     ...employeesQueriesHandlers,

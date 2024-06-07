@@ -19,7 +19,7 @@ Content-Type: application/json
 
 {
   "name": "Employee Update",
-  "managerId": 2,
+  "managerId": 1,
   "contactInfo": {
     "email": "employee2@acme.com"
   }
@@ -30,5 +30,5 @@ PATCH  http://localhost:3000/employees/3/assign-manager
 Content-Type: application/json
 
 {
-  "managerId": 1
+  "managerId": 2
 }

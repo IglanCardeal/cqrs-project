@@ -36,7 +36,7 @@ export class ManagerAssignedSendEmailHandler
     // eslint-disable-next-line no-console
     console.log(
       // eslint-disable-next-line max-len
-      `Send email to ${manager.name}, saying that ${employee.name} has joined their team.`,
+      `\n\nSend email to ${manager.name}, saying that ${employee.name} has joined their team.\n\n`,
     )
   }
 }

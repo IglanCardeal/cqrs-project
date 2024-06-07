@@ -1,3 +1,5 @@
+import { AfterLoad } from 'typeorm'
+
 export class EntityBase {
   #events: unknown[] = []
 
@@ -10,6 +12,11 @@ export class EntityBase {
   }
 
   getEvents() {
-    return structuredClone(this.#events)
+    return [...this.#events]
+  }
+
+  @AfterLoad()
+  clearEventsAfterLoad() {
+    this.clearEvents()
   }
 }

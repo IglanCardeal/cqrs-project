@@ -2,14 +2,28 @@ import { EventsHandler, IEventHandler } from '@nestjs/cqrs'
 import { ManagerAssignedEvent } from './manager-assigned.event'
 import { DataSource } from 'typeorm'
 import { Employee } from '@src/employees/entities/employee.entity'
+import { Job, Queue } from 'bull'
+import { InjectQueue, Process, Processor } from '@nestjs/bull'
 
 @EventsHandler(ManagerAssignedEvent)
+@Processor('employees')
 export class ManagerAssignedSendEmailHandler
   implements IEventHandler<ManagerAssignedEvent>
 {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    @InjectQueue('employees')
+    private readonly queue: Queue,
+  ) {}
 
-  async handle({ managerId, employeeId }: ManagerAssignedEvent) {
+  async handle(event: ManagerAssignedEvent) {
+    const jobName = 'manager-assigned-send-email'
+    await this.queue.add(jobName, event)
+  }
+
+  @Process('manager-assigned-send-email')
+  async process(job: Job<ManagerAssignedEvent>) {
+    const { employeeId, managerId } = job.data
     const manager = await this.dataSource.manager.findOne(Employee, {
       where: {
         id: managerId,

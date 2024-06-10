@@ -14,7 +14,7 @@ import { BullModule } from '@nestjs/bull'
         removeOnFail: 1000,
         attempts: 3,
         backoff: {
-          type: 'exponetial',
+          type: 'exponential',
           delay: 1000,
         },
       },

@@ -32,3 +32,12 @@ Content-Type: application/json
 {
   "managerId": 2
 }
+
+### Webhook
+POST  http://localhost:3000/employees/webhooks/employee/payment
+Content-Type: application/json
+
+{
+  "employeeId": 2,
+  "amount": 30000
+}

@@ -1,29 +1,20 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 import { AppService } from './app.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { EmployeesModule } from './employees/employees.module'
 import { ReportsModule } from './reports/reports.module'
 import { BullModule } from '@nestjs/bull'
-import { ConfigModule } from '@nestjs/config'
-import * as Joi from 'joi'
-import { AppConfig } from './app.config'
+
+import { AppConfigService } from './app-config/app-config.service'
+import { AppConfigModule } from './app-config/app-config.module'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      validationSchema: Joi.object({
-        REDIS_URL: Joi.string().required(),
-        MAX_ATTEMPTS: Joi.number().required(),
-        MAX_ATTEMPTS_DELAY: Joi.number().default(1_000),
-        EMPLOYEE_QUEUE_NAME: Joi.string().required(),
-        WEBHOOK_QUEUE_NAME: Joi.string().required(),
-      }),
-    }),
+    AppConfigModule,
     BullModule.forRootAsync({
-      imports: [forwardRef(() => AppModule)],
-      inject: [AppConfig],
-      useFactory: (appConfig: AppConfig) => ({
+      imports: [AppConfigModule],
+      inject: [AppConfigService],
+      useFactory: (appConfig: AppConfigService) => ({
         redis: appConfig.redisUrl,
         defaultJobOptions: {
           removeOnComplete: 100,
@@ -46,7 +37,6 @@ import { AppConfig } from './app.config'
     EmployeesModule,
     ReportsModule,
   ],
-  providers: [AppService, AppConfig],
-  exports: [AppConfig],
+  providers: [AppService],
 })
 export class AppModule {}

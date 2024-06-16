@@ -7,6 +7,7 @@ import { BullModule } from '@nestjs/bull'
 
 import { AppConfigService } from './app-config/app-config.service'
 import { AppConfigModule } from './app-config/app-config.module'
+import { AuthModule } from './auth/auth.module'
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { AppConfigModule } from './app-config/app-config.module'
     }),
     EmployeesModule,
     ReportsModule,
+    AuthModule,
   ],
   providers: [AppService],
 })

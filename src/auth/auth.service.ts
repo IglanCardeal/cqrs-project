@@ -3,6 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { randomBytes, scrypt as _script } from 'crypto'
 import { promisify } from 'util'
 
@@ -11,6 +12,8 @@ const fakeUserDb = []
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly jwtService: JwtService) {}
+
   async signUp(email: string, password: string) {
     if (fakeUserDb.find((user) => user.email === email)) {
       throw new BadRequestException('Email in use')
@@ -25,8 +28,6 @@ export class AuthService {
     }
 
     fakeUserDb.push(user)
-    // eslint-disable-next-line no-console
-    console.log(fakeUserDb)
 
     return {
       email,
@@ -47,9 +48,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials')
     }
 
+    const payload = {
+      username: user.email,
+      sub: user.userId,
+    }
+    const accessToken = this.jwtService.sign(payload)
+
     return {
-      ...user,
-      password: undefined,
+      accessToken,
     }
   }
 }

@@ -8,9 +8,12 @@ import { BullModule } from '@nestjs/bull'
 import { AppConfigService } from './app-config/app-config.service'
 import { AppConfigModule } from './app-config/app-config.module'
 import { AuthModule } from './auth/auth.module'
+import { FeatureModule } from './feature/feature.module'
+import { PassportModule } from '@nestjs/passport'
 
 @Module({
   imports: [
+    PassportModule,
     AppConfigModule,
     BullModule.forRootAsync({
       imports: [AppConfigModule],
@@ -38,6 +41,7 @@ import { AuthModule } from './auth/auth.module'
     EmployeesModule,
     ReportsModule,
     AuthModule,
+    FeatureModule,
   ],
   providers: [AppService],
 })

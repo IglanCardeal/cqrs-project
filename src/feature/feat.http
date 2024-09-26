@@ -5,4 +5,4 @@ GET http://localhost:3000/feature/public
 
 # Private
 GET http://localhost:3000/feature/private
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAZW1haWwuY29tIiwiaWF0IjoxNzIwNjU0NzA1LCJleHAiOjE3MjEyNTk1MDV9.jY23JKJkAkW2l-KpB1b6n0kgCskGvNmCSRXwIu8fVjU
+Authorization: Bearer <your token>
